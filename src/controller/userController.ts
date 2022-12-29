@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
 import { User } from '../interface/IUser';
+import { UserRepository } from '../repository/prismaRepository/UserRepository';
 import { CreateUser } from '../use-cases/CreateUser';
 import { UserLogin } from '../use-cases/UserLogin';
 
-const createUser = new CreateUser();
-const userLogin = new UserLogin();
+const repository = new UserRepository();
+const createUser = new CreateUser(repository);
+const userLogin = new UserLogin(repository);
 
 class UserController {
   async create(req: Request, res: Response): Promise<Response> {
@@ -31,7 +33,7 @@ class UserController {
       }
       return res.status(200).json({ message: 'Login completed.', user: user.username, jwtToken });
     } catch (error) {
-      return res.status(400).json({ error: error });
+      return res.status(401).json({ error: error });
     }
   }
 }
