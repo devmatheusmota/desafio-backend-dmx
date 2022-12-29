@@ -9,7 +9,7 @@ class UserRepository {
     const data = await prisma.user.create({
       data: {
         username,
-        hashedPassword: await hash(password, 8),
+        password: await hash(password, 8),
       },
     });
 
