@@ -1,6 +1,7 @@
 import 'jest';
 import supertest from 'supertest';
 import app from '../app';
+import { username, password } from './userController.test';
 
 describe('Brewery Controller', () => {
   it('should return 401 if no token is provided', async () => {
@@ -16,7 +17,7 @@ describe('Brewery Controller', () => {
     // Login and receive valid token
     const loginResponse = await supertest(app)
       .post('/login')
-      .send({ username: 'Teste', password: 'Teste' });
+      .send({ username, password });
 
     // Set token into header Authorization
     const response = await supertest(app)

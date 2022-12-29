@@ -12,15 +12,15 @@ describe('UserLogin Usecase', () => {
     await createUser.execute({ username: 'Teste', password: 'Teste' });
 
     await expect(userLogin.execute({ username: 'Teste', password: 'Teste_errado' })).rejects.toMatchObject({
-      message: 'Email or password is incorrect!',
-      statusCode: 400,
+      message: 'Username or password is incorrect!',
+      statusCode: 401,
     });
   });
 
   it('should throw if user dont exist', async () => {
     await expect(userLogin.execute({ username: 'Test', password: 'Teste' })).rejects.toMatchObject({
       message: 'User not found!',
-      statusCode: 400,
+      statusCode: 401,
     });
   });
 

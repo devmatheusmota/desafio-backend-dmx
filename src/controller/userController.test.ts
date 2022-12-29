@@ -3,11 +3,18 @@ import supertest from 'supertest';
 import app from '../app';
 import { v4 as uuid } from 'uuid';
 
+export const username = uuid();
+export const password = uuid();
+
+afterAll(async () => {
+  await supertest(app)
+    .post('/user/create')
+    .send({ username: username, password: password });
+});
+
 describe('User Controller', () => {
   describe('Create', () => {
     it('should return 201 if user has been created', async () => {
-      const username = uuid();
-      const password = uuid();
       const response = await supertest(app)
         .post('/user/create')
         .send({ username: username, password: password });
@@ -43,11 +50,11 @@ describe('User Controller', () => {
     it('should return 200 if login is completed', async () => {
       const response = await supertest(app)
         .post('/login')
-        .send({ username: 'Teste', password: 'Teste' });
+        .send({ username, password });
 
       expect(response.status).toBe(200);
       expect(response.body.message).toBe('Login completed.');
-      expect(response.body.user).toBe('Teste');
+      expect(response.body.user).toBe(username);
     });
 
     it('should return 401 if username dont exists', async () => {
@@ -61,7 +68,7 @@ describe('User Controller', () => {
     it('should return 401 when username is correct but password is wrong', async () => {
       const response = await supertest(app)
         .post('/login')
-        .send({ username: 'Teste', password: 'wrong_password' });
+        .send({ username, password: 'wrong_password' });
       expect(response.status).toBe(401);
       expect(response.body.error.message).toBe('Username or password is incorrect!');
     });
